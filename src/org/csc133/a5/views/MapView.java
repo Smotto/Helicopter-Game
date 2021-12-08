@@ -5,6 +5,7 @@ import com.codename1.ui.Graphics;
 import com.codename1.ui.Transform;
 import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.geom.Point;
+import com.codename1.ui.geom.Point2D;
 import org.csc133.a5.GameWorld;
 import org.csc133.a5.gameobjects.GameObject;
 
@@ -16,29 +17,72 @@ public class MapView extends Container {
     }
 
     @Override
+    public void laidOut() {
+        this.gw.setDimension(new Dimension(this.getWidth(), this.getHeight()));
+        this.gw.init();
+    }
+
+    private Point2D transformPoint2D(Transform t, Point2D p) {
+        float[] in = new float[2];
+        float[] out = new float[2];
+        in[0] = (float) p.getX();
+        in[1] = (float) p.getY();
+        t.transformPoint(in, out);
+        return new Point2D(out[0], out[1]);
+    }
+
+    private Transform getInverseVTM() {
+        Transform inverseVTM = Transform.makeIdentity();
+
+        try {
+            getVTM().getInverse(inverseVTM);
+        } catch (Transform.NotInvertibleException e) {
+            e.printStackTrace();
+        }
+
+        return inverseVTM;
+    }
+
+    private Transform getVTM() {
+        Transform worldToND, ndToDisplay, theVTM;
+        float winLeft, winRight, winTop, winBottom;
+
+        winLeft = winBottom = 0;
+        winRight = this.getWidth();
+        winTop = this.getHeight();
+
+        float winHeight = winTop - winBottom;
+        float winWidth = winRight - winLeft;
+
+        // * Start
+        worldToND = buildWorldToNDTransform(winWidth, winHeight, winLeft,
+                winBottom);
+        ndToDisplay = buildNDToDisplayTransform(this.getWidth(),
+                this.getHeight());
+        theVTM = ndToDisplay.copy();
+        theVTM.concatenate(worldToND);
+        return theVTM;
+    }
+
+    @Override
     public void pointerPressed(int x, int y) {
-        System.out.println(x);
-        System.out.println(y);
-        System.out.println(getParent().getAbsoluteX());
-        System.out.println(getParent().getAbsoluteY());
+        x = x - getAbsoluteX();
+        y = y - getAbsoluteY();
+
+        Point2D sp = transformPoint2D(getInverseVTM(), new Point2D(x, y));
 
         // TODO: use a function (finding distance from fire) to choose the
-        //  closest valid distance fire. hint: we already have a function for
-        //  that.
-        this.gw.selectFire(x, y, getParent().getAbsoluteX(),
-                getParent().getAbsoluteY());
+        //  closest valid distance fire.
+        //  hint: we already have a function for that.
+
+        this.gw.selectFire(sp);
+
         // !! Checks the release of a click
         // !! gives the point location of the cursor
         // !! command triggers a select function
         // !! select function notifies an update to other fires to deselect
 
         //addPoint(x-getParent().getAbsoluteX(), y-getParent().getAbsoluteY());
-    }
-
-    @Override
-    public void laidOut() {
-        this.gw.setDimension(new Dimension(this.getWidth(), this.getHeight()));
-        this.gw.init();
     }
 
     // set up the world to ND transform
@@ -62,29 +106,11 @@ public class MapView extends Container {
     }
 
     private void setupViewingTransformationMatrix(Graphics g) {
-        Transform worldToND, ndToDisplay, theVTM;
-        float winLeft, winRight, winTop, winBottom;
-
-        winLeft = winBottom = 0;
-        winRight = this.getWidth();
-        winTop = this.getHeight();
-
-        float winHeight = winTop - winBottom;
-        float winWidth = winRight - winLeft;
-
-        // * Start
-        worldToND = buildWorldToNDTransform(winWidth, winHeight, winLeft,
-                winBottom);
-        ndToDisplay =
-                buildNDToDisplayTransform(this.getWidth(), this.getHeight());
-        theVTM = ndToDisplay.copy();
-        theVTM.concatenate(worldToND);
-
         // * VTM ready to use
         Transform gXform = Transform.makeIdentity();
         g.getTransform(gXform);
         gXform.translate(getAbsoluteX(), getAbsoluteY());
-        gXform.concatenate(theVTM);
+        gXform.concatenate(getVTM());
         gXform.translate(-getAbsoluteX(), -getAbsoluteY());
 
         g.setTransform(gXform);

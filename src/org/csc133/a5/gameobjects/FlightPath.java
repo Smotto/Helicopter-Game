@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class FlightPath extends GameObject {
     BezierCurve bezierCurve;
     ArrayList<Point2D> controlPointsList;
-    HelicopterStrategy strategy;
 
     public FlightPath(Dimension worldSize, River river, Helipad helipad) {
         this.worldSize = worldSize;
@@ -31,11 +30,10 @@ public class FlightPath extends GameObject {
         bezierCurve = new BezierCurve(controlPointsList);
     }
 
-    public void addFireControlPoint(Fire fire) {
-        controlPointsList.add(new Point2D(fire.getTranslation().getTranslateX(),
-                fire.getTranslation().getTranslateY()));
+    public void setTail(Point2D lastControlPoint) {
+        controlPointsList.set(controlPointsList.size() - 1,
+                lastControlPoint);
     }
-
 
     // * Nested Class * //
     class BezierCurve extends GameObject {
@@ -45,13 +43,15 @@ public class FlightPath extends GameObject {
             this.controlPointsList = controlPointsList;
         }
 
-        private void drawBezierCurve(Graphics g,
+        private void drawBezierCurve(Graphics g, Point originParent,
                                      ArrayList<Point2D> controlPoints) {
             final double smallFloatIncrement = 0.01;
 
             g.setColor(ColorUtil.GRAY);
             for (Point2D p : controlPoints) {
-                g.fillArc((int) p.getX() - 15, (int) p.getY() - 15, 30, 30, 0
+                g.fillArc((int) p.getX() - 15 + originParent.getX(),
+                        (int) p.getY() - 15 + originParent.getY(), 30,
+                        30, 0
                         , 360);
             }
 
@@ -73,15 +73,19 @@ public class FlightPath extends GameObject {
 
                 }
 
-                g.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(),
-                        (int) nextPoint.getX(), (int) nextPoint.getY());
+                g.drawLine((int) currentPoint.getX() + originParent.getX(),
+                        (int) currentPoint.getY() + originParent.getY() ,
+                        (int) nextPoint.getX() + originParent.getX(),
+                        (int) nextPoint.getY() + originParent.getY());
 
                 currentPoint = nextPoint;
                 t = t + smallFloatIncrement;
             }
             nextPoint = controlPoints.get(controlPoints.size() - 1);
-            g.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(),
-                    (int) nextPoint.getX(), (int) nextPoint.getY());
+            g.drawLine((int) currentPoint.getX() + originParent.getX(),
+                    (int) currentPoint.getY() + originParent.getY(),
+                    (int) nextPoint.getX() + originParent.getX(),
+                    (int) nextPoint.getY() + originParent.getY());
 
         }
 
@@ -103,16 +107,16 @@ public class FlightPath extends GameObject {
         @Override
         public void localDraw(Graphics g, Point originParent,
                               Point originScreen) {
-            drawBezierCurve(g, controlPointsList);
+            drawBezierCurve(g, originParent, controlPointsList);
         }
     }
 
     @Override
-    protected void localDraw(Graphics g, Point parentOrigin,
-                             Point screenOrigin) {
+    protected void localDraw(Graphics g, Point originParent,
+                             Point originScreen) {
         // Three Bezier Curves
         // First curve helipad -> river
         // NPH (no player helicopter)
-        bezierCurve.localDraw(g, parentOrigin, screenOrigin);
+        bezierCurve.localDraw(g, originParent, originScreen);
     }
 }

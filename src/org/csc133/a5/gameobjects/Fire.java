@@ -4,6 +4,7 @@ import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.geom.Point;
+import com.codename1.ui.geom.Point2D;
 import org.csc133.a5.interfaces.Observer;
 
 import java.util.Random;
@@ -21,6 +22,18 @@ public class Fire extends Fixed implements Observer {
         Random r = new Random();
         int randomSize = r.nextInt(15) + 1;
         setDimension(new Dimension(randomSize, randomSize));
+    }
+
+    private double distanceBetween(float x, float y, Point2D b) {
+        double dx = x - b.getX();
+        double dy = y - b.getY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public boolean contains(Point2D p) {
+        return distanceBetween(getTranslation().getTranslateX(),
+                getTranslation().getTranslateY(),
+                p) <= getDimension().getWidth();
     }
 
     private abstract class FireState {

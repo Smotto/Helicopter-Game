@@ -5,6 +5,7 @@ import com.codename1.ui.Button;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
 import com.codename1.ui.geom.Dimension;
+import com.codename1.ui.geom.Point2D;
 import com.codename1.ui.layouts.BoxLayout;
 import org.csc133.a5.gameobjects.*;
 
@@ -91,13 +92,16 @@ public class GameWorld {
         }
     }
 
-    // TODO: Do stuff based on cursor position
-    public void selectFire(int x, int y, int parentX, int parentY) {
-        System.out.println("Cursor Position x: " + x);
-        System.out.println("Cursor Position y: " + y);
+    public void selectFire(Point2D sp) {
         for (Fire fire : fires) {
-            fire.select(fireDispatch);
+            if (fire.contains(sp)) {
+                fire.select(fireDispatch);
+                flightPath.setTail(new Point2D(
+                        fire.getTranslation().getTranslateX(),
+                        fire.getTranslation().getTranslateY()));
+            }
         }
+
     }
 
     public GameWorld() {

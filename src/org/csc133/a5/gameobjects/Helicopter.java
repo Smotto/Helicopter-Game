@@ -41,12 +41,12 @@ public class Helicopter extends Moveable implements Steerable {
     // * Default Constructor * //
     private Helicopter() {}
 
-    public Helicopter(Dimension worldSize) {
+    public Helicopter(Dimension worldSize, int color) {
         // * Rotation
         setHeading(-90);
 
         this.worldSize = worldSize;
-        setColorInteger(ColorUtil.YELLOW);
+        setColorInteger(color);
         setDimension(new Dimension(
                 worldSize.getWidth() / 80,
                 worldSize.getWidth() / 80));
@@ -56,7 +56,7 @@ public class Helicopter extends Moveable implements Steerable {
 
         heloParts = new ArrayList<>();
 
-        heloParts.add(new HeloBubble());
+        heloParts.add(new HeloBubble(getColorInteger()));
         heloParts.add(new HeloEngineBlock());
         heloParts.add(new HeloLeftLeg());
         heloParts.add(new HeloRightLeg());
@@ -66,19 +66,12 @@ public class Helicopter extends Moveable implements Steerable {
         heloBlade = new HeloBlade();
         heloParts.add(heloBlade);
         heloParts.add(new HeloBladeShaft());
-
-        translate(worldSize.getWidth() / 2.0,
-                getDimension().getHeight() * 6);
-    }
-
-    private Helicopter getHelo() {
-        return this;
     }
 
     // * Helicopter Parts * //
     private static class HeloBubble extends Arc {
-        public HeloBubble() {
-            super(ColorUtil.rgb(66, 165, 245),
+        public HeloBubble(int color) {
+            super(color,
                     2 * Helicopter.BUBBLE_RADIUS,
                     2 * Helicopter.BUBBLE_RADIUS,
                     0, Helicopter.BUBBLE_RADIUS * 0.80f,

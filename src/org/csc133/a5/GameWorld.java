@@ -1,5 +1,6 @@
 package org.csc133.a5;
 
+import com.codename1.charts.util.ColorUtil;
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.Button;
 import com.codename1.ui.Dialog;
@@ -18,7 +19,7 @@ public class GameWorld {
     private Dimension worldSize;
     private River river;
     private Helipad helipad;
-    private Helicopter helicopter;
+    private PlayerHelicopter playerHelicopter;
     private NonPlayerHelicopter nonPlayerHelicopter;
     private Buildings buildings;
     private Fires fires;
@@ -111,14 +112,14 @@ public class GameWorld {
         river = new River(worldSize);
 
         helipad = new Helipad(worldSize);
-        helicopter = new Helicopter(worldSize);
+        playerHelicopter = new PlayerHelicopter(worldSize);
         nonPlayerHelicopter = new NonPlayerHelicopter(worldSize);
 
         buildings = new Buildings();
         fires = new Fires();
         fireDispatch = new FireDispatch();
         flightPath = new FlightPath(worldSize, river, helipad);
-
+        nonPlayerHelicopter.setPath(flightPath);
         createBuildings();
         addFiresToBuildings();
         // TODO: Fix attachFiresToObserver, put it somewhere else?
@@ -130,26 +131,28 @@ public class GameWorld {
         gameObjects.add(fires);
         gameObjects.add(helipad);
         gameObjects.add(flightPath);
-        gameObjects.add(helicopter);
+        gameObjects.add(playerHelicopter);
+        gameObjects.add(nonPlayerHelicopter);
 
     }
 
     // Every 100ms this is being called.
     public void tick() {
         ticks++;
-        this.helicopter.updateFuel(this);
-        this.buildings.spawnRandomFires(ticks,fireDispatch, gameObjects, fires);
+        this.playerHelicopter.updateFuel(this);
+        this.buildings.spawnRandomFires(ticks, fireDispatch, gameObjects,
+                fires);
         // Move based on elapsed time between the same calls
         newTime = System.currentTimeMillis();
-        this.helicopter.move((int) (newTime - lastTime));
+        this.playerHelicopter.move((int) (newTime - lastTime));
+        this.nonPlayerHelicopter.move((int) (newTime - lastTime));
         lastTime = System.currentTimeMillis();
-
         this.fires.removeFiresWithZeroSize();
 
         this.buildings.updateBuildings();
 
         this.buildings.checkOverallDamage(this);
-        this.helicopter.checkEndGamePosition(fires, helipad, this);
+        this.playerHelicopter.checkEndGamePosition(fires, helipad, this);
     }
 
     // * Pop-up Windows * //
@@ -190,39 +193,39 @@ public class GameWorld {
 
     // * Player Methods * //
     public void dumpWater() {
-        this.helicopter.dumpWater(fires);
+        this.playerHelicopter.dumpWater(fires);
     }
 
     public void drinkWater() {
-        this.helicopter.drinkWater(river);
+        this.playerHelicopter.drinkWater(river);
     }
 
     public void playerTurnRight() {
-        this.helicopter.steerRight();
+        this.playerHelicopter.steerRight();
     }
 
     public void startOrStopEngine() {
-        this.helicopter.startOrStopEngine();
+        this.playerHelicopter.startOrStopEngine();
     }
 
     public void playerTurnLeft() {
-        this.helicopter.steerLeft();
+        this.playerHelicopter.steerLeft();
     }
 
     public void accelerate() {
-        this.helicopter.accelerate();
+        this.playerHelicopter.accelerate();
     }
 
     public void decelerate() {
-        this.helicopter.decelerate();
+        this.playerHelicopter.decelerate();
     }
 
     public boolean isEngineOn() {
-        return this.helicopter.isEngineOn();
+        return this.playerHelicopter.isEngineOn();
     }
 
     public boolean isMoving() {
-        return this.helicopter.isMoving();
+        return this.playerHelicopter.isMoving();
     }
 
     public void quit() {
@@ -239,11 +242,11 @@ public class GameWorld {
     }
 
     public String getHelicopterSpeed() {
-        return String.valueOf(helicopter.getSpeed());
+        return String.valueOf(playerHelicopter.getSpeed());
     }
 
     public String getHelicopterFuel() {
-        return String.valueOf(helicopter.getFuel());
+        return String.valueOf(playerHelicopter.getFuel());
     }
 
     public String getFireCount() {
@@ -251,7 +254,8 @@ public class GameWorld {
     }
 
     public String getPlayerHeading() {
-        return String.valueOf(Math.abs(helicopter.getDisplayHeading() % 360));
+        return String.valueOf(
+                Math.abs(playerHelicopter.getDisplayHeading() % 360));
     }
 
     public String getTotalFireSize() {

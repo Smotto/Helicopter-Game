@@ -20,12 +20,12 @@ public class FlightPath extends GameObject {
         controlPointsList = new ArrayList<>();
         controlPointsList.add(
                 new Point2D(helipad.getTranslation().getTranslateX(),
-                        helipad.getTranslation().getTranslateY()
-                                + helipad.getDimension().getHeight()));
+                        helipad.getTranslation().getTranslateY()));
         controlPointsList.add(
                 new Point2D(river.getTranslation().getTranslateX(),
-                        river.getTranslation().getTranslateY() +
-                                river.getDimension().getHeight()));
+                        river.getTranslation().getTranslateY()));
+        controlPointsList.add(new Point2D(worldSize.getWidth() / 3.0,
+                worldSize.getHeight() / 2.0));
 
         bezierCurve = new BezierCurve(controlPointsList);
     }
@@ -33,6 +33,10 @@ public class FlightPath extends GameObject {
     public void setTail(Point2D lastControlPoint) {
         controlPointsList.set(controlPointsList.size() - 1,
                 lastControlPoint);
+    }
+
+    Point2D evaluateCurve(double t) {
+        return bezierCurve.evaluateCurve(t);
     }
 
     // * Nested Class * //
@@ -104,11 +108,28 @@ public class FlightPath extends GameObject {
             return choose(n - 1, k - 1) + choose(n - 1, k);
         }
 
+        Point2D evaluateCurve(double t) {
+            Point2D p = new Point2D(0, 0);
+
+            int d = controlPointsList.size() - 1;
+            for (int i = 0; i < controlPointsList.size(); i++) {
+                // Bernstein polynomial
+                p.setX(p.getX() +
+                        bernsteinD(d, i, t) * controlPointsList.get(i).getX());
+                p.setY(p.getY() +
+                        bernsteinD(d, i, t) * controlPointsList.get(i).getY());
+
+            }
+
+            return p;
+        }
+
         @Override
         public void localDraw(Graphics g, Point originParent,
                               Point originScreen) {
             drawBezierCurve(g, originParent, controlPointsList);
         }
+
     }
 
     @Override

@@ -15,19 +15,19 @@ import org.csc133.a5.views.MapView;
 public class Game extends Form implements Runnable {
 
     org.csc133.a5.GameWorld gw;
-    MapView worldView;
+    MapView mapView;
     GlassCockpit glassCockpit;
     ControlCluster controlCluster;
 
     public Game() {
         gw = new org.csc133.a5.GameWorld();
-        worldView = new MapView(gw);
+        mapView = new MapView(gw);
         glassCockpit = new GlassCockpit(gw);
         controlCluster = new ControlCluster(gw);
 
         this.getAllStyles().setBgColor(ColorUtil.BLACK);
         this.setLayout(new BorderLayout());
-        this.add(BorderLayout.CENTER, worldView);
+        this.add(BorderLayout.CENTER, mapView);
         this.add(BorderLayout.SOUTH, controlCluster);
         this.add(BorderLayout.NORTH, glassCockpit);
 
@@ -37,6 +37,7 @@ public class Game extends Form implements Runnable {
         addKeyListener('f', new DumpWaterCommand(gw)); // Dump water
         addKeyListener('d', new DrinkWaterCommand(gw)); // Drink water
         addKeyListener('s', new StartOrStopEngineCommand(gw)); // Engine
+        addKeyListener('z', new ZoomOutOrInCommand(mapView)); // Engine
         addKeyListener(-93, new TurnLeftCommand(gw)); // Left
         addKeyListener(-94, new TurnRightCommand(gw)); // Right
         addKeyListener(-91, new AccelerateCommand(gw));  // Up
@@ -57,7 +58,7 @@ public class Game extends Form implements Runnable {
     public void run() {
         // Step 1: Update Local Transforms
         // Example, helicopter blade.
-        worldView.updateLocalTransforms();
+        mapView.updateLocalTransforms();
 
         // Every 100 milliseconds our GameWorld
         // is given the opportunity to update

@@ -11,6 +11,7 @@ import org.csc133.a5.gameobjects.GameObject;
 
 public class MapView extends Container {
     GameWorld gw;
+    float zoomFloat = 1.0f;
 
     public MapView(GameWorld gw) {
         this.gw = gw;
@@ -43,13 +44,25 @@ public class MapView extends Container {
         return inverseVTM;
     }
 
+    public void setZoomFloat(float zoomFloat) {
+        this.zoomFloat = zoomFloat;
+    }
+
+    public void zoomInOut() {
+        if (zoomFloat == 1.5f) {
+            setZoomFloat(1.0f);
+        } else if (zoomFloat == 1.0f) {
+            setZoomFloat(1.5f);
+        }
+    }
+
     private Transform getVTM() {
         Transform worldToND, ndToDisplay, theVTM;
         float winLeft, winRight, winTop, winBottom;
 
         winLeft = winBottom = 0;
-        winRight = this.getWidth();
-        winTop = this.getHeight();
+        winRight = this.getWidth() / zoomFloat;
+        winTop = this.getHeight() / zoomFloat;
 
         float winHeight = winTop - winBottom;
         float winWidth = winRight - winLeft;
@@ -71,18 +84,8 @@ public class MapView extends Container {
 
         Point2D sp = transformPoint2D(getInverseVTM(), new Point2D(x, y));
 
-        // TODO: use a function (finding distance from fire) to choose the
-        //  closest valid distance fire.
-        //  hint: we already have a function for that.
-
         this.gw.selectFire(sp);
 
-        // !! Checks the release of a click
-        // !! gives the point location of the cursor
-        // !! command triggers a select function
-        // !! select function notifies an update to other fires to deselect
-
-        //addPoint(x-getParent().getAbsoluteX(), y-getParent().getAbsoluteY());
     }
 
     // set up the world to ND transform

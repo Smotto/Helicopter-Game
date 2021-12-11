@@ -75,7 +75,8 @@ public abstract class GameObject implements Drawable {
                 parentDimension.getHeight()); // move everything back up
         gXform.scale(1, -1); // upper left to lower left
 
-        // move the drawing coordinates as part of the “local origin” transformations
+        // move the drawing coordinates as part of
+        // the “local origin” transformations
         // absolute screen coordinates
         gXform.translate(-screenOrigin.getX(), -screenOrigin.getY());
 

@@ -39,7 +39,8 @@ public class Helicopter extends Moveable implements Steerable {
     private HeloTailSpinner heloTailSpinner;
 
     // * Default Constructor * //
-    private Helicopter() {}
+    private Helicopter() {
+    }
 
     public Helicopter(Dimension worldSize, int color) {
         // * Rotation

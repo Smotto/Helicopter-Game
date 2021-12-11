@@ -12,16 +12,22 @@ public abstract class Moveable extends GameObject {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+
     public void setHeading(int heading) {
         this.heading = heading;
     }
 
-    public int getHeading() { return this.heading; }
+    public int getHeading() {
+        return this.heading;
+    }
+
     public int getSpeed() {
         return this.speed;
     }
 
-    public int getDisplayHeading() {return this.heading + 90;}
+    public int getDisplayHeading() {
+        return this.heading + 90;
+    }
 
     public abstract void move(int elapsedTimeInMillis);
 

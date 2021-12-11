@@ -11,7 +11,9 @@ public class AccelerateCommand extends Command {
         super("Accel");
         this.gameWorld = gameWorld;
     }
-    @Override public void actionPerformed(ActionEvent evt) {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
         super.actionPerformed(evt);
         gameWorld.accelerate();
     }

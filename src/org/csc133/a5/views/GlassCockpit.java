@@ -5,8 +5,7 @@ import com.codename1.ui.Label;
 import com.codename1.ui.layouts.GridLayout;
 import org.csc133.a5.GameWorld;
 
-public class GlassCockpit extends Container
-{
+public class GlassCockpit extends Container {
     GameWorld gw;
 
     Label heading;

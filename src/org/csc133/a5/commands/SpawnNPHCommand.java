@@ -11,7 +11,9 @@ public class SpawnNPHCommand extends Command {
         super("Spawn");
         this.gameWorld = gameWorld;
     }
-    @Override public void actionPerformed(ActionEvent evt) {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
         super.actionPerformed(evt);
         // TODO: Make a helicopter spawn function
 

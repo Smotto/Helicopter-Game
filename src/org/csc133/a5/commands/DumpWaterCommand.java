@@ -12,7 +12,8 @@ public class DumpWaterCommand extends Command {
         this.gameWorld = gameWorld;
     }
 
-    @Override public void actionPerformed(ActionEvent evt) {
+    @Override
+    public void actionPerformed(ActionEvent evt) {
         super.actionPerformed(evt);
         gameWorld.dumpWater();
     }

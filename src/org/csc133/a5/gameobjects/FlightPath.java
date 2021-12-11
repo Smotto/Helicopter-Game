@@ -78,7 +78,7 @@ public class FlightPath extends GameObject {
                 }
 
                 g.drawLine((int) currentPoint.getX() + originParent.getX(),
-                        (int) currentPoint.getY() + originParent.getY() ,
+                        (int) currentPoint.getY() + originParent.getY(),
                         (int) nextPoint.getX() + originParent.getX(),
                         (int) nextPoint.getY() + originParent.getY());
 

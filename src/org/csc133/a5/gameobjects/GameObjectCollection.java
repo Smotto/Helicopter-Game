@@ -3,7 +3,8 @@ package org.csc133.a5.gameobjects;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class GameObjectCollection<T> extends GameObject implements Iterable<T> {
+public abstract class GameObjectCollection<T> extends GameObject implements
+        Iterable<T> {
 
     CopyOnWriteArrayList<T> gameObjects;
 
@@ -26,7 +27,7 @@ public abstract class GameObjectCollection<T> extends GameObject implements Iter
         return new GameObjectIterator();
     }
 
-    public GameObjectCollection(){
+    public GameObjectCollection() {
         this.gameObjects = new CopyOnWriteArrayList<>();
     }
 
@@ -42,8 +43,7 @@ public abstract class GameObjectCollection<T> extends GameObject implements Iter
         gameObjects.remove(gameObject);
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return gameObjects.size();
     }
 }

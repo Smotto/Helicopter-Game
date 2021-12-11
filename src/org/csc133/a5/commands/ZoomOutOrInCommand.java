@@ -13,7 +13,8 @@ public class ZoomOutOrInCommand extends Command {
         this.mapView = mapView;
     }
 
-    @Override public void actionPerformed(ActionEvent evt) {
+    @Override
+    public void actionPerformed(ActionEvent evt) {
         super.actionPerformed(evt);
         this.mapView.zoomInOut();
     }

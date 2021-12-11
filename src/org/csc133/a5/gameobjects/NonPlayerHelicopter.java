@@ -21,7 +21,7 @@ public class NonPlayerHelicopter extends Helicopter {
         River river;
         Fires fires;
 
-        FlightStrategy(Helicopter helicopter, River river, Fires fires){
+        FlightStrategy(Helicopter helicopter, River river, Fires fires) {
             this.helicopter = helicopter;
             this.river = river;
             this.fires = fires;
@@ -53,7 +53,7 @@ public class NonPlayerHelicopter extends Helicopter {
     private class AvoidStrategy implements HelicopterStrategy {
         Helicopter helicopter;
 
-        AvoidStrategy(Helicopter helicopter){
+        AvoidStrategy(Helicopter helicopter) {
             this.helicopter = helicopter;
         }
 

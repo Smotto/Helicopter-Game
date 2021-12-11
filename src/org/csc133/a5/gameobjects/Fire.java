@@ -41,14 +41,29 @@ public class Fire extends Fixed implements Observer {
             return Fire.this;
         }
 
-        public void attach(FireDispatch dispatch) {}
-        public void detach(FireDispatch dispatch) {}
-        public void select(FireDispatch dispatch) {}
-        public void deselect(FireDispatch dispatch) {}
-        public void start() {}
-        public void stop() {}
-        public void grow() {}
-        public void shrink(int waterAmount) {}
+        public void attach(FireDispatch dispatch) {
+        }
+
+        public void detach(FireDispatch dispatch) {
+        }
+
+        public void select(FireDispatch dispatch) {
+        }
+
+        public void deselect(FireDispatch dispatch) {
+        }
+
+        public void start() {
+        }
+
+        public void stop() {
+        }
+
+        public void grow() {
+        }
+
+        public void shrink(int waterAmount) {
+        }
 
     }
 

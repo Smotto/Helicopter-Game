@@ -64,6 +64,14 @@ public class MapView extends Container {
         winRight = this.getWidth() / zoomFloat;
         winTop = this.getHeight() / zoomFloat;
 
+        // Compensation
+        float compensateRight = this.getWidth() - winRight;
+        float compensateTop = this.getHeight() - winTop;
+
+        // Adjustment
+        winLeft += compensateRight;
+        winBottom += compensateTop;
+
         float winHeight = winTop - winBottom;
         float winWidth = winRight - winLeft;
 

@@ -105,11 +105,7 @@ public class Building extends Fixed {
             double x = (a - b + d * d) / (2 * d);
             double z = x * x;
             double y = Math.sqrt(a - z);
-//
-//            // Return minimum circle area between two circles inside each other
-//            if (d <= Math.abs(bRadius - aRadius)) {
-//                return Math.PI * Math.min(a, b);
-//            }
+
             // Return intersection area
             return a * Math.asin(y / aRadius) +
                     b * Math.asin(y / bRadius) -
@@ -119,12 +115,19 @@ public class Building extends Fixed {
     }
 
     public void setFireInBuilding(Fire fire) {
+        float x = getTranslation().getTranslateX();
+        float y = getTranslation().getTranslateY();
+
         Random r = new Random();
-        fire.translate(getTranslation().getTranslateX() -
-                        (getDimension().getWidth() / 2f - 15) * r.nextDouble(),
-                getTranslation().getTranslateY() -
-                        (getDimension().getHeight() / 2f - 15) * r.nextDouble()
-        );
+        double max = x + getDimension().getWidth() / 2f - 15;
+        double maxY = y + getDimension().getHeight() / 2f - 15;
+        double min = x - getDimension().getWidth() / 2f + 15;
+        double minY = y - getDimension().getHeight() / 2f + 15;
+        double randomValue =
+                r.nextDouble() * (max - min) + min;
+        double randomValueY = r.nextDouble() * (maxY - minY) + minY;
+
+        fire.translate(randomValue, randomValueY);
         buildingFires.add(fire);
         fire.start();
     }

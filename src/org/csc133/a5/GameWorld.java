@@ -112,7 +112,7 @@ public class GameWorld {
 
         helipad = new Helipad(worldSize);
         playerHelicopter = new PlayerHelicopter(worldSize);
-        nonPlayerHelicopter = new NonPlayerHelicopter(worldSize);
+        nonPlayerHelicopter = new NonPlayerHelicopter(worldSize, river, fires);
 
         buildings = new Buildings();
         fires = new Fires();

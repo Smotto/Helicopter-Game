@@ -18,24 +18,24 @@ public class NonPlayerHelicopter extends Helicopter {
 
     private class FlightStrategy implements HelicopterStrategy {
         Helicopter helicopter;
+        River river;
+        Fires fires;
 
-        FlightStrategy(Helicopter helicopter){
+        FlightStrategy(Helicopter helicopter, River river, Fires fires){
             this.helicopter = helicopter;
+            this.river = river;
+            this.fires = fires;
         }
 
         @Override
         public void updateLocation() {
-            double angle = (Math.toRadians(getHeading()));
             Point2D c = new Point2D(getTranslation().getTranslateX(),
                     getTranslation().getTranslateY());
             Point2D p = flightPath.evaluateCurve(t);
-            translate(getSpeed() * Math.cos(angle),
-                    getSpeed() * -Math.sin(angle));
             double tx = p.getX() - c.getX();
             double ty = p.getY() - c.getY();
 
-            // ?? I dont get 360 minus degrees ?? //
-            double theta = Math.toDegrees(Math.atan2(ty, tx));
+            double theta = 360 - Math.toDegrees(Math.atan2(ty, tx));
 
             helicopter.translate(tx, ty);
 
@@ -44,9 +44,9 @@ public class NonPlayerHelicopter extends Helicopter {
                 rotate(getHeading() - theta);
                 setHeading((int) theta);
             } else {
-                t = 0;
+                //
+                dumpWater(fires);
             }
-
         }
     }
 
@@ -64,13 +64,14 @@ public class NonPlayerHelicopter extends Helicopter {
 
     }
 
-    public NonPlayerHelicopter(Dimension worldSize) {
+    public NonPlayerHelicopter(Dimension worldSize, River river, Fires fires) {
         super(worldSize, ColorUtil.GREEN);
         this.startOrStopEngine();
         this.setSpeed(5);
-        setCompressionStrategy(new FlightStrategy(this));
+        setCompressionStrategy(new FlightStrategy(this, river, fires));
         translate(worldSize.getWidth() / 2.0,
                 getDimension().getHeight() / 12.0f);
+        this.setWater(5000);
 
     }
 
